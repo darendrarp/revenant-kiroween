@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
     if (page.status < 200 || page.status >= 400) {
       return lib.sendError(res, 502, `The archive returned HTTP ${page.status} for that snapshot.`);
     }
-    const readable = lib.extractReadable(page.text, 20000);
+    const readable = lib.extractReadable(page.text, 20000, url.href);
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
     return lib.sendJson(res, 200, {
       url: url.href,
@@ -42,6 +42,7 @@ module.exports = async (req, res) => {
       headings: readable.headings,
       text: readable.text,
       truncated: readable.truncated,
+      redirect: readable.redirect,
     });
   } catch (err) {
     return lib.sendError(res, 500, 'Something went wrong while reading that snapshot.');

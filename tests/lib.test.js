@@ -116,6 +116,21 @@ test('extractReadable: truncates long text and flags it', () => {
   assert.equal(out.truncated, true);
 });
 
+test('extractReadable: detects a meta-refresh redirect and resolves it', () => {
+  const html = '<html><head><meta http-equiv="refresh" content="0; url=https://example.com/moved"></head>' +
+    '<body><p>Redirecting…</p></body></html>';
+  const out = lib.extractReadable(html);
+  assert.equal(out.redirect, 'https://example.com/moved');
+  // Attribute order reversed + relative URL resolved against the base.
+  const out2 = lib.extractReadable(
+    '<meta content="0; url=/next" http-equiv="refresh">',
+    20000,
+    'https://web.archive.org/web/20200101000000/http://example.com/',
+  );
+  assert.equal(out2.redirect, 'https://web.archive.org/next');
+  assert.equal(lib.extractReadable('<p>no redirect here</p>').redirect, null);
+});
+
 test('parseYear / formatSnapshotDate / tombstoneFromTimeline', () => {
   assert.equal(lib.parseYear('20261118082138'), 2026);
   assert.equal(lib.parseYear('19961001000000'), 1996);

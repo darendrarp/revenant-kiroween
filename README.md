@@ -76,7 +76,7 @@ cannot be abused as an open proxy.
 ## Local development
 
 ```bash
-npm test        # 18 tests (unit + property-style), no dependencies
+npm test        # 19 tests (unit + property-style), no dependencies
 npm run dev     # serves http://localhost:3000 — static frontend + real API handlers
 ```
 

@@ -80,7 +80,7 @@
 > (`tests/property.test.js`, seeded PRNG, 1,000+ generated cases) caught two
 > real bugs a unit test would likely have missed — a link-extraction regex
 > that treated a stray quote as an href, and an IPv6-bracket gap in the SSRF
-> guard. Both are fixed and covered by unit tests. `npm test`: 18/18 green.
+> guard. Both are fixed and covered by unit tests. `npm test`: 19/19 green.
 
 ## Testing instructions (for judges — no login needed)
 
@@ -124,7 +124,7 @@ the Kiroween 2026 hackathon. Publish on any public third-party blog platform
 - [x] Public GitHub repo with MIT license (visible in About section)
 - [x] `/.kiro` at repo root, committed, NOT in `.gitignore`
 - [x] Live app URL, no login required
-- [x] README with run instructions; `npm test` green (18/18)
+- [x] README with run instructions; `npm test` green (19/19)
 - [x] Kiro write-up (honest, see above)
 - [ ] Demo video recorded + uploaded to YouTube (public, <3 min) — needs the
       entrant (script: `DEMO_VIDEO_SCRIPT.md`)

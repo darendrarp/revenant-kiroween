@@ -321,12 +321,31 @@ function extractLinks(html, baseUrl, limit = 60) {
 
 /**
  * Reduce snapshot HTML to readable text. Strips scripts, styles, nav/header/
- * footer chrome; keeps title, headings, paragraphs. Never throws on bad HTML.
+ * footer chrome; keeps title, headings, paragraphs. Also detects a
+ * meta-refresh redirect (common for dead-site snapshots that bounce to a
+ * successor page) and returns it as `redirect`. Never throws on bad HTML.
  */
-function extractReadable(html, maxChars = 20000) {
+function extractReadable(html, maxChars = 20000, baseUrl = null) {
   const src = String(html || '');
   const titleMatch = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(src);
   const title = titleMatch ? stripTags(titleMatch[1]).slice(0, 300) : '';
+  // Meta-refresh redirect: scan each <meta> tag (attribute order varies).
+  let redirect = null;
+  const metaRe = /<meta\b[^>]*>/gi;
+  let mm;
+  while ((mm = metaRe.exec(src)) !== null && !redirect) {
+    const tag = mm[0];
+    if (!/http-equiv\s*=\s*["']?refresh["']?/i.test(tag)) continue;
+    const content = /content\s*=\s*["']([^"']*)["']/i.exec(tag);
+    const urlPart = content && /url\s*=\s*([^\s"']+)/i.exec(content[1]);
+    if (urlPart) {
+      try {
+        redirect = baseUrl ? new URL(urlPart[1], baseUrl).href : urlPart[1];
+      } catch {
+        redirect = urlPart[1];
+      }
+    }
+  }
   let body = src
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
     .replace(/<style[\s\S]*?<\/style>/gi, ' ')
@@ -357,7 +376,7 @@ function extractReadable(html, maxChars = 20000) {
   text = text.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
   const truncated = text.length > maxChars;
   if (truncated) text = text.slice(0, maxChars);
-  return { title, headings, text, truncated };
+  return { title, headings, text, truncated, redirect };
 }
 
 /** Read a JSON request body with a size cap (for POST endpoints). */

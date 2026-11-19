@@ -139,3 +139,4 @@ User submits URL
 | 2026-11-19 | Audit split: extract server-side, check client-chunked | Keeps every function call under the 10s Hobby limit on link-heavy pages |
 | 2026-11-19 | Zero npm dependencies, no build step | Deploy reliability + judges can read the whole repo quickly |
 | 2026-11-19 | Reader endpoint restricted to `web.archive.org` | Prevents the endpoint from becoming a general-purpose open proxy |
+| 2026-11-19 | `extractReadable` detects meta-refresh redirects | The GeoCities 2019 snapshot is a pure redirect page (zero visible text); the reader now surfaces the redirect target instead of showing an empty page |

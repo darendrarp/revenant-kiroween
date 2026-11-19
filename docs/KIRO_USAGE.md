@@ -83,7 +83,7 @@ and sign in there. After that, every `.kiro/` artifact in this repo activates.
 | `.kiro/steering/*`, `AGENTS.md` | Builder, following Kiro's steering format | Inclusion front matter per Kiro docs |
 | `.kiro/hooks/*.json` | Builder, per the v1 hook schema on kiro.dev | Trigger names verified against the official hook-types page (`PostFileSave`, `PostTaskExecution`) |
 | `.kiro/settings/mcp.json` | Builder, per the MCP config format | `fetch` server; not exercised (no session) |
-| Application code, tests, docs | Builder | Written to the spec; verified by `npm test` (18/18) + live smoke tests |
+| Application code, tests, docs | Builder | Written to the spec; verified by `npm test` (19/19) + live smoke tests |
 | Kiro CLI install + login attempts | Builder, on the build VM | Install OK; login blocked (see table above) |
 
 ## How to continue this project in Kiro

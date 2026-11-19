@@ -207,6 +207,11 @@
     fetchJson('/api/extract?url=' + encodeURIComponent(snapshotUrl))
       .then(function (data) {
         var html = '';
+        if (data.redirect) {
+          html += '<div class="note-box" style="margin:0 0 14px">This snapshot immediately redirects to ' +
+            '<a href="' + escapeHtml(data.redirect) + '" target="_blank" rel="noopener">' + escapeHtml(data.redirect) + '</a>.' +
+            ' <button class="mini-btn" type="button" id="reader-follow">Open the redirect in the viewer</button></div>';
+        }
         if (data.title) html += '<p class="reader-title">' + escapeHtml(data.title) + '</p>';
         if (data.headings && data.headings.length) {
           html += data.headings.slice(0, 5).map(function (h) { return '<h4>' + escapeHtml(h) + '</h4>'; }).join('');
@@ -217,6 +222,13 @@
           : '<p>No readable text could be extracted from this snapshot. Try the full snapshot view instead.</p>';
         if (data.truncated) html += '<p><em>Text truncated at 20,000 characters.</em></p>';
         body.innerHTML = html;
+        var followBtn = document.getElementById('reader-follow');
+        if (followBtn && data.redirect) {
+          followBtn.addEventListener('click', function () {
+            closeModal(document.getElementById('reader-modal'));
+            openViewer(data.redirect);
+          });
+        }
       })
       .catch(function (err) {
         body.innerHTML = errorHtml(err.message || 'Could not read that snapshot.');

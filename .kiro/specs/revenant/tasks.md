@@ -60,7 +60,7 @@
        `docs/KIRO_USAGE.md` (honest Kiro write-up), `docs/SUBMISSION.md`
        (submission package), `docs/DEMO_VIDEO_SCRIPT.md` (<3 min script)
        — _Req: 8_
-- [ ] 14. Push to public GitHub repo `darendrarp/revenant-kiroween` (MIT license,
+- [x] 14. Push to public GitHub repo `darendrarp/revenant-kiroween` (MIT license,
        `.kiro/` committed, not ignored)
        — _Req: 8_
 - [ ] 15. Deploy to Vercel, verify the live app end-to-end (resurrect a real dead
