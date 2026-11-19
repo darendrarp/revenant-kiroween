@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REVENANT — Resurrect the Dead Web</title>
+<meta name="description" content="Paste a dead link. REVENANT checks if it is alive, finds its last Wayback Machine snapshot, and brings the page back to life. Free, no account, no API key.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23a7f3d0' d='M16 3C9 3 4 9 4 16v11l4-3 4 3 4-3 4 3 4-3 4 3V16c0-7-5-13-12-13z'/%3E%3Ccircle cx='12' cy='15' r='2' fill='%230b0e14'/%3E%3Ccircle cx='20' cy='15' r='2' fill='%230b0e14'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="fog fog-1" aria-hidden="true"></div>
+<div class="fog fog-2" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="./" aria-label="REVENANT home">
+      <svg class="logo-ghost" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3C9 3 4 9 4 16v11l4-3 4 3 4-3 4 3 4-3 4 3V16c0-7-5-13-12-13z"/><circle cx="12" cy="15" r="2" fill="#0b0e14"/><circle cx="20" cy="15" r="2" fill="#0b0e14"/></svg>
+      <span class="logo-word">REVENANT</span>
+    </a>
+    <nav class="header-nav">
+      <a href="#graveyard">The Graveyard</a>
+      <a href="https://github.com/darendrarp/revenant-kiroween" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <p class="hero-kicker">38% of the 2013 web is already gone</p>
+    <h1>Every dead link deserves<br>a second life.</h1>
+    <p class="hero-sub">Paste a dead URL. REVENANT checks whether it is alive, digs up its
+      last snapshot from the Internet Archive's Wayback Machine, and brings the
+      page back — tombstone, life story, and all.</p>
+    <p class="hero-stats"><span id="stat-revived">0 souls revived</span><span class="stat-dot" aria-hidden="true">·</span><span>Free forever · No account · No API key</span></p>
+  </section>
+
+  <section class="panel" aria-label="Resurrection tools">
+    <div class="tabs" role="tablist" aria-label="Tools">
+      <button class="tab active" role="tab" id="tab-resurrect" aria-selected="true" aria-controls="panel-resurrect" data-tab="resurrect">Resurrect a link</button>
+      <button class="tab" role="tab" id="tab-audit" aria-selected="false" aria-controls="panel-audit" data-tab="audit">Graveyard audit</button>
+      <button class="tab" role="tab" id="tab-bulk" aria-selected="false" aria-controls="panel-bulk" data-tab="bulk">Bulk check</button>
+    </div>
+
+    <!-- RESURRECT -->
+    <div class="tab-panel active" id="panel-resurrect" role="tabpanel" aria-labelledby="tab-resurrect">
+      <form id="resurrect-form" class="search-row" autocomplete="off">
+        <label class="sr-only" for="resurrect-input">URL to resurrect</label>
+        <input id="resurrect-input" name="url" type="text" inputmode="url" placeholder="Paste a dead link — e.g. geocities.com" spellcheck="false" required>
+        <button class="btn btn-primary" type="submit" id="resurrect-btn">Resurrect</button>
+      </form>
+      <p class="demo-line">No dead link handy? Try a famous ghost:
+        <button type="button" class="demo-chip" data-url="geocities.com">GeoCities</button>
+        <button type="button" class="demo-chip" data-url="posterous.com">Posterous</button>
+        <button type="button" class="demo-chip" data-url="formspring.me">Formspring</button>
+      </p>
+      <div id="resurrect-result" class="result" aria-live="polite"></div>
+    </div>
+
+    <!-- AUDIT -->
+    <div class="tab-panel" id="panel-audit" role="tabpanel" aria-labelledby="tab-audit" hidden>
+      <p class="panel-help">Paste one of <em>your</em> pages. REVENANT lists its outbound
+        links and checks each one, so you can fix link rot before your readers hit it.</p>
+      <form id="audit-form" class="search-row" autocomplete="off">
+        <label class="sr-only" for="audit-input">Page URL to audit</label>
+        <input id="audit-input" name="url" type="text" inputmode="url" placeholder="https://your-blog.com/a-post" spellcheck="false" required>
+        <button class="btn btn-primary" type="submit" id="audit-btn">Audit this page</button>
+      </form>
+      <div id="audit-result" class="result" aria-live="polite"></div>
+    </div>
+
+    <!-- BULK -->
+    <div class="tab-panel" id="panel-bulk" role="tabpanel" aria-labelledby="tab-bulk" hidden>
+      <p class="panel-help">One URL per line, up to 25. Perfect for triaging a
+        bibliography, a bookmark export, or a sitemap.</p>
+      <form id="bulk-form" autocomplete="off">
+        <label class="sr-only" for="bulk-input">URLs to check, one per line</label>
+        <textarea id="bulk-input" rows="6" placeholder="https://example.com&#10;geocities.com&#10;https://en.wikipedia.org/wiki/Link_rot" spellcheck="false" required></textarea>
+        <button class="btn btn-primary" type="submit" id="bulk-btn">Check all links</button>
+      </form>
+      <div id="bulk-result" class="result" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="graveyard" id="graveyard" aria-label="The Graveyard">
+    <div class="graveyard-head">
+      <h2>The Graveyard</h2>
+      <button class="btn btn-ghost btn-small" id="graveyard-clear" type="button">Bury them all</button>
+    </div>
+    <p class="graveyard-sub">Every soul you have revived, kept on this device only.
+      Nothing leaves your browser.</p>
+    <p id="graveyard-empty" class="graveyard-empty">No souls revived yet. The fog is
+      quiet. The graves are empty. Paste a dead link above and wake something up.</p>
+    <div id="graveyard-list" class="graveyard-list"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>REVENANT resurrects with the <a href="https://web.archive.org/" target="_blank" rel="noopener">Internet Archive's Wayback Machine</a>.
+      Snapshots belong to the Archive and their original authors.</p>
+    <p>Built for <a href="https://kiroween.devpost.com/" target="_blank" rel="noopener">Kiroween 2026</a> (Resurrection) · Open source (MIT) ·
+      <a href="https://github.com/darendrarp/revenant-kiroween" target="_blank" rel="noopener">github.com/darendrarp/revenant-kiroween</a></p>
+  </div>
+</footer>
+
+<!-- Snapshot viewer modal -->
+<div class="modal" id="viewer-modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-box modal-wide" role="dialog" aria-modal="true" aria-labelledby="viewer-title">
+    <div class="modal-head">
+      <h3 id="viewer-title">Resurrected page</h3>
+      <button class="btn btn-ghost btn-small" type="button" data-close aria-label="Close viewer">Close ✕</button>
+    </div>
+    <p class="modal-sub" id="viewer-sub"></p>
+    <iframe id="viewer-frame" title="Archived snapshot" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+  </div>
+</div>
+
+<!-- Reader modal -->
+<div class="modal" id="reader-modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="reader-title">
+    <div class="modal-head">
+      <h3 id="reader-title">Reader view</h3>
+      <button class="btn btn-ghost btn-small" type="button" data-close aria-label="Close reader">Close ✕</button>
+    </div>
+    <div id="reader-body" class="reader-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

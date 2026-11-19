@@ -1,0 +1,1 @@
+{"hooks":[{"action":{"command":"npm test","type":"command"},"description":"Runs the full test suite whenever an API function or a test file is saved, so regressions surface in the same Kiro session that introduced them.","matcher":"^(api|tests)/.*\\.js$","name":"Run tests on API or test change","timeout":120,"trigger":"PostFileSave"}],"version":"v1"}
