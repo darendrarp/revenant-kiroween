@@ -63,6 +63,6 @@
 - [x] 14. Push to public GitHub repo `darendrarp/revenant-kiroween` (MIT license,
        `.kiro/` committed, not ignored)
        — _Req: 8_
-- [ ] 15. Deploy to Vercel, verify the live app end-to-end (resurrect a real dead
+- [x] 15. Deploy to Vercel, verify the live app end-to-end (resurrect a real dead
        link, reader view, audit, bulk), record the live URL in `SUBMISSION.md`
        — _Req: 1–8_
